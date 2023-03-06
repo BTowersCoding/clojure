@@ -62,4 +62,6 @@
   (testing "Yacht as choice"
      (is (= 10 (yacht/score [2 2 2 2 2] "choice")))))
 
-(run-tests)
+(comment
+  (run-tests)
+  )

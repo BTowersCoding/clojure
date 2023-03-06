@@ -4,10 +4,9 @@
     (if (= (count (set dices)) 1) 50 0))
 
 (defn mapDicesToCounterArray [dices]
-  (let [counterArray (atom [0 0 0 0 0 0])]
-    (doseq [item dices]
-      (swap! counterArray update (dec item) inc))
-    counterArray))
+  (mapv #(if (nil? %) 0 %)
+       (map (fn [v] (get (frequencies dices) v))
+            (range 1 7))))
 
 (defn getNoOfAppearances [dices diceValue]
   (count (filter (fn [value] (= value diceValue)) dices)))
@@ -16,7 +15,7 @@
   (reduce + 0 dices))
 
 (defn getScoreForTheFourOfAKindCategory [dices]
-  (let [counterArray @(mapDicesToCounterArray dices)
+  (let [counterArray (mapDicesToCounterArray dices)
         scores (remove nil? (for [i (range 6)]
                               (when (>= (get counterArray i) 4)
                                 (* 4 (inc i)))))]
@@ -29,7 +28,7 @@
   (if (= (sort dices) [2 3 4 5 6]) 30 0))
 
 (defn getScoreForTheFullHouseCategory [dices]
-  (let [counterArray @(mapDicesToCounterArray dices)]
+  (let [counterArray (mapDicesToCounterArray dices)]
      (if (and (contains? (set counterArray) 2)
               (contains? (set counterArray) 3))
        (if (apply >
